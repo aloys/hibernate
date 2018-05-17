@@ -3,6 +3,7 @@ package demo.hibernate.lab.test;
 import demo.hibernate.lab.Book;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
@@ -23,39 +24,8 @@ public class HibernateExecutionListener  extends RunListener {
     private static final Logger logger = LoggerFactory.getLogger(HibernateExecutionListener.class);
 
 
-    public static SessionFactory sessionFactory;
-
-
-    public static final void initialize() {
-        final StandardServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-                .configure("hibernate.cfg.xml")
-                .build();
-
-        final Metadata metadata = new MetadataSources(serviceRegistry)
-                .addAnnotatedClass(Book.class)
-                .buildMetadata();
-
-
-        if(sessionFactory == null){
-            synchronized (HibernateExecutionListener.class){
-                if(sessionFactory == null){
-                    sessionFactory = metadata.getSessionFactoryBuilder().build();
-                }
-            }
-
-        }
-
-        Assert.assertNotNull(sessionFactory);
-    }
-
-
-
     public void testRunStarted(Description description)  {
         logger.debug("Number of tests to execute: {}", description.testCount());
-
-
-        initialize();
-
     }
 
     public void testRunFinished(Result result)  {
@@ -65,14 +35,16 @@ public class HibernateExecutionListener  extends RunListener {
     public void testStarted(Description description)  {
         logger.debug("Starting test: {}", description.getMethodName());
 
-        final Session currentSession = sessionFactory.getCurrentSession();
-        currentSession.beginTransaction();
+        HibernateSession.beginTransaction();
     }
+
 
     public void testFinished(Description description)  {
         logger.debug("Finished test: {}" ,description.getMethodName());
 
-        commit();
+        HibernateSession.commit();
+
+        DatabaseQuery.query("book");
     }
 
 
@@ -80,39 +52,21 @@ public class HibernateExecutionListener  extends RunListener {
     public void testFailure(Failure failure)  {
         logger.debug("Failed test: {}", failure.getDescription().getMethodName());
 
-        rollback();
+        HibernateSession.rollback();
     }
 
     public void testAssumptionFailure(Failure failure) {
         logger.debug("Failed test: {}", failure.getDescription().getMethodName());
 
-        rollback();
+        HibernateSession.rollback();
     }
 
     public void testIgnored(Description description)  {
         logger.debug("Ignored test: {} " + description.getMethodName());
 
-        rollback();
+        HibernateSession.rollback();
 
     }
 
-    private void commit() {
-        final Session currentSession = sessionFactory.getCurrentSession();
-        if( currentSession.getTransaction().isActive()){
-           try{
-               currentSession.getTransaction().commit();
-           }catch (RuntimeException e){
-               currentSession.getTransaction().rollback();
-               throw e;
-           }
-        }
 
-    }
-
-    private void rollback() {
-        final Session currentSession = sessionFactory.getCurrentSession();
-        if( currentSession.getTransaction().isActive()){
-            currentSession.getTransaction().rollback();
-        }
-    }
 }

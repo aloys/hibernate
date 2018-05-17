@@ -26,5 +26,8 @@
         <Root level="INFO">
             <AppenderRef ref="Console"/>
         </Root>
+        <Logger level="DEBUG" additivity="false" name="demo.hibernate.lab">
+            <AppenderRef ref="Console"/>
+        </Logger>
     </Loggers>
 </Configuration>
