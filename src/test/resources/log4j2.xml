@@ -23,9 +23,18 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Root level="INFO">
+        <Root level="ERROR">
             <AppenderRef ref="Console"/>
         </Root>
+        <!--<Logger level="DEBUG" additivity="false" name="org.hibernate.stat">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger level="DEBUG" additivity="false" name="org.hibernate.sql">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger level="TRACE" additivity="false" name="org.hibernate.type.descriptor.sql">
+            <AppenderRef ref="Console"/>
+        </Logger>-->
         <Logger level="DEBUG" additivity="false" name="demo.hibernate.lab">
             <AppenderRef ref="Console"/>
         </Logger>
