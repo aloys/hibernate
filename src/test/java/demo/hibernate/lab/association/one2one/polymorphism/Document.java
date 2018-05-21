@@ -25,6 +25,12 @@ public class Document {
     @Getter
     private final String type;
 
+
+    @Getter @Setter
+    @OneToOne
+    @JoinColumn(name = "person_id")
+    private Person person;
+
     public Document(String type) {
         this.type = type;
     }

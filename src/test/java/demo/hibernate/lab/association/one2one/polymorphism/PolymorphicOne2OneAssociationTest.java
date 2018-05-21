@@ -3,6 +3,7 @@ package demo.hibernate.lab.association.one2one.polymorphism;
 import demo.hibernate.lab.test.HibernateRunner;
 import demo.hibernate.lab.test.HibernateSession;
 import org.hibernate.Session;
+import org.hibernate.annotations.AnyMetaDef;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -16,11 +17,15 @@ public class PolymorphicOne2OneAssociationTest {
 
     //  http://webdev.jhuep.com/~jcs/ejava-javaee/coursedocs/content/html/jpa-relationex-one2one.html
     @BeforeClass
-    public static void initialize(){
+    public static void initialize() throws Exception {
         HibernateSession.registerEntity(Person.class);
         HibernateSession.registerEntity(Passport.class);
         HibernateSession.registerEntity(DrivingLicence.class);
         //HibernateSession.registerEntity(Document.class);
+
+        AnyMetaDef anyMetaDef = Person.class.getDeclaredField("document").getAnnotation(AnyMetaDef.class);
+        System.out.println(anyMetaDef.metaValues()[0]);
+
     }
 
 
@@ -32,6 +37,7 @@ public class PolymorphicOne2OneAssociationTest {
         //Case 1: Create  a person with passport
         final Passport passport = new Passport();
         passport.setDocumentNo(UUID.randomUUID().toString());
+        passport.setCountry("Canada");
 
         final Person person01 = new Person();
         person01.setName("Has Passport");
@@ -44,6 +50,7 @@ public class PolymorphicOne2OneAssociationTest {
         //Case 2: Create  a person with Driving Licence
         final DrivingLicence licence = new DrivingLicence();
         licence.setDocumentNo(UUID.randomUUID().toString());
+        licence.setCategory("G2");
 
         final Person person02 = new Person();
         person02.setName("Has DrivingLicence");

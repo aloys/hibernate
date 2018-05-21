@@ -14,13 +14,11 @@ import javax.persistence.OneToOne;
 @Entity
 public class DrivingLicence extends Document{
 
-
     @Getter @Setter
-    @OneToOne
-    @JoinColumn(name = "person_id")
-    private Person person;
+    private String category;
 
     public DrivingLicence() {
         super(DrivingLicence.class.getSimpleName());
+        setCategory("X");
     }
 }

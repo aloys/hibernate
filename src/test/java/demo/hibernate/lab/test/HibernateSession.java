@@ -30,9 +30,9 @@ public final class HibernateSession {
     private static final Set<Class<?>> ENTITY_CLASSES = new LinkedHashSet<>();
 
     public static void registerEntity(Class<?> entityClass){
-        if (!entityClass.isAnnotationPresent(Entity.class)) {
-            throw new IllegalArgumentException("Entity class: "+entityClass+" misses annotation @Entity");
-        }
+        //if (!entityClass.isAnnotationPresent(Entity.class)) {
+          //  throw new IllegalArgumentException("Entity class: "+entityClass+" misses annotation @Entity");
+        //}
         ENTITY_CLASSES.add(entityClass);
     }
 

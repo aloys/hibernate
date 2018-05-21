@@ -9,14 +9,12 @@ import javax.persistence.*;
  * Created by amazimpaka on 2018-05-17
  */
 
+
 @Entity
 public class Passport  extends Document{
 
-
     @Getter @Setter
-    @OneToOne
-    @JoinColumn(name = "person_id")
-    private Person person;
+    private String country;
 
     public Passport() {
         super(Passport.class.getSimpleName());
